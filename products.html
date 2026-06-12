@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SANNYO BATTERY</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+
+body{
+  background:linear-gradient(135deg,#0a192f,#112240,#1a365d);
+  color:#fff;
+}
+
+/* NAVBAR */
+nav{
+  background:linear-gradient(90deg,#020c1b,#0a192f);
+  display:flex;
+  justify-content:space-between;
+  padding:15px 25px;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+nav h2{color:#64ffda;}
+nav ul{display:flex;gap:20px;list-style:none;}
+nav li{cursor:pointer;color:#ccd6f6;}
+nav li:hover{color:#64ffda;}
+
+/* HERO */
+.hero{
+  text-align:center;
+  padding:80px 20px;
+  background:linear-gradient(135deg,#0a192f,#112240);
+}
+.hero h1{
+  font-size:42px;
+  color:#64ffda;
+}
+.hero p{
+  margin:15px 0;
+  color:#8892b0;
+}
+.hero button{
+  padding:12px 20px;
+  margin:10px;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  font-weight:bold;
+  background:linear-gradient(90deg,#64ffda,#00bcd4);
+  color:#020c1b;
+  transition:0.3s;
+}
+.hero button:hover{
+  transform:scale(1.08);
+}
+
+/* SECTION */
+section{padding:40px 20px;}
+h2{text-align:center;margin-bottom:25px;color:#64ffda;}
+
+/* PRODUCTS */
+.products{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:20px;
+}
+.card{
+  background:#112240;
+  border-radius:12px;
+  padding:15px;
+  text-align:center;
+  box-shadow:0 8px 25px rgba(0,0,0,0.5);
+  transition:0.3s;
+}
+.card:hover{
+  transform:translateY(-10px) scale(1.02);
+}
+.card img{
+  width:100%;
+  height:150px;
+  object-fit:cover;
+  border-radius:10px;
+}
+.card h3{margin:10px 0;color:#ccd6f6;}
+.price{color:#64ffda;font-weight:bold;}
+.warranty{font-size:13px;color:#8892b0;}
+
+.card button{
+  margin-top:10px;
+  padding:10px;
+  border:none;
+  background:linear-gradient(90deg,#00bcd4,#64ffda);
+  color:#020c1b;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.card button:hover{
+  opacity:0.9;
+}
+
+/* CART */
+.cart{
+  background:#112240;
+  padding:20px;
+  border-radius:12px;
+}
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+  color:#ccd6f6;
+}
+.checkout{
+  width:100%;
+  padding:12px;
+  background:linear-gradient(90deg,#ff9800,#ff5722);
+  color:#fff;
+  border:none;
+  margin-top:10px;
+  border-radius:6px;
+}
+
+/* BILL */
+#bill{
+  display:none;
+  background:#0a192f;
+  padding:20px;
+  margin-top:20px;
+  border-radius:10px;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  border:1px solid #233554;
+  padding:8px;
+  text-align:center;
+}
+.print-btn{
+  margin-top:10px;
+  padding:10px;
+  background:linear-gradient(90deg,#2196f3,#00bcd4);
+  color:#fff;
+  border:none;
+  border-radius:6px;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+.hero h1{font-size:28px;}
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<h2>SANNYO BATTERY</h2>
+<ul>
+<li onclick="scrollTo('shop')">Shop</li>
+<li onclick="scrollTo('cart')">Cart (<span id="count">0</span>)</li>
+</ul>
+</nav>
+
+<div class="hero">
+<h1>Power Your Life with Sannyo Battery</h1>
+<p>Trusted Dealer of Exide, Amaron, Luminous & More</p>
+</div>
+
+<section id="shop">
+<h2>Our Products</h2>
+<div class="products" id="productList"></div>
+</section>
+
+<section id="cart">
+<div class="cart">
+<h2>Your Cart</h2>
+<div id="cartItems"></div>
+<h3>Total: ₹<span id="total">0</span></h3>
+<button class="checkout" onclick="generateBill()">Checkout</button>
+</div>
+
+<div id="bill">
+<h2>Invoice</h2>
+<p id="date"></p>
+<table>
+<tr><th>Product</th><th>Qty</th><th>Price</th><th>Total</th></tr>
+<tbody id="billItems"></tbody>
+</table>
+<h3>Total: ₹<span id="billTotal"></span></h3>
+<button class="print-btn" onclick="window.print()">Download Bill</button>
+</div>
+</section>
+
+<script>
+// SAME JS AS BEFORE (NO CHANGE)
+const products = [
+{name:"Exide Home InvaMaster + Inverterz Star",price:8500,warranty:"36 Months",img:"https://th.bing.com/th/id/OIP.WGWABZcqomtD_-dNiQILfQHaHa?w=171&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"Tata Green TG 350L",price:9500,warranty:"48 Months",img:"https://th.bing.com/th/id/OIP.nmCOkKdY4gBAAk-4YZqXaAAAAA?w=181&h=198&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"Powerzone PZ60B20L",price:4200,warranty:"24 Months",img:"https://th.bing.com/th/id/OIP.aVb30dFDY7U3HvxNn90OrgAAAA?w=173&h=176&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"Amaron Hi Life GO",price:5200,warranty:"36 Months",img:"https://th.bing.com/th/id/OIP.VDM037dsGwLXLkII-oqQjgHaHa?w=177&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"Noble Powers Luminous Solar",price:15000,warranty:"60 Months",img:"https://th.bing.com/th/id/OIP.s_yogclt4Jjol0kp4Y30SAHaHa?w=173&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"Okaya PowerUP OPJT19036",price:8800,warranty:"48 Months",img:"https://rukminim2.flixcart.com/image/416/416/xif0q/inverter-battery/n/j/w/52-opjt19036-8-okaya-original-imagx6mhrkfrkzgc.jpeg?q=70&crop=false&fit=cover"},
+{name:"Exide Mileage Car SUV",price:6000,warranty:"36 Months",img:"https://th.bing.com/th/id/OIP.UtTulHkOkzvnw3WloHIm9wHaHa?w=178&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"Luminous Inverlast ILTT 26060",price:10500,warranty:"48 Months",img:"https://5.imimg.com/data5/SELLER/Default/2023/2/WZ/QR/NK/98714330/luminous-inverlast-iltt26060-220ah-inverlast-inverter-battery-1000x1000.png"},
+{name:"V-Guard VT 220",price:9200,warranty:"36 Months",img:"https://th.bing.com/th/id/OIP.3TJDex4OhndMEV8EDuMAmwAAAA?w=186&h=186&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"Tata Green Velocity YT7Z",price:3000,warranty:"24 Months",img:"https://th.bing.com/th/id/OIP.XXh2XHGQWJc9_JpAcB3KTQAAAA?w=203&h=183&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"Hero Power Ride Neo HBT4",price:2800,warranty:"24 Months",img:"https://th.bing.com/th/id/OIP.YMfbzurJ722Sg603T2PCvAHaGk?w=211&h=187&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"Amaron Hi Life (Green)",price:6500,warranty:"36 Months",img:"https://th.bing.com/th/id/OIP.Of2y-08VRRu1hUQ7fwDTDwHaHa?w=179&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"Livguard Inverter Ultimate Power",price:11000,warranty:"48 Months",img:"https://th.bing.com/th/id/OIP.iC91Dyz6iyyYJgZVEwsa_wHaHa?w=168&h=18₀&c=7&r=₀&o=₇&dpr=₁.₃&pid=₁.₇&rm=₃"},
+{name:"Okaya PowerON OPSJT14048",price:8700,warranty:"48 Months",img:"https://rukminim2.flixcart.com/image/612/612/xif0q/inverter-battery/a/l/h/32-opsjt14048-atsw1175-10-okaya-original-imahbqu6xwcwu3kj.jpeg?q=70&crop=false&fit=cover"},
+{name:"Microtek MTK2003624TT",price:9800,warranty:"48 Months",img:"https://th.bing.com/th/id/OIP.7QJ_7Bf2doTx3DBZCHzxWwHaFj?w=260&h=195&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"Amaron Current Tall Tubular",price:12500,warranty:"60 Months",img:"https://th.bing.com/th/id/OIP.Wsf9wams19iN3ipj0xZXKwHaGl?w=217&h=192&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"},
+{name:"SF Sonic Flash Start 850",price:7200,warranty:"36 Months",img:"https://th.bing.com/th/id/OIP.ZvOOKSx2ZReVVklXrqpMtgHaHa?w=179&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3"}
+];
+
+let cart={};
+
+function loadProducts(){
+let list=document.getElementById("productList");
+products.forEach((p,i)=>{
+list.innerHTML+=`
+<div class="card">
+<img src="${p.img}">
+<h3>${p.name}</h3>
+<p class="warranty">${p.warranty}</p>
+<p class="price">₹${p.price}</p>
+<button onclick="addToCart(${i})">Add to Cart</button>
+</div>`;
+});
+}
+
+function addToCart(i){
+if(cart[i]) cart[i].qty++;
+else cart[i]={...products[i],qty:1};
+updateCart();
+}
+
+function updateCart(){
+let items=document.getElementById("cartItems");
+items.innerHTML="";
+let total=0,count=0;
+
+Object.values(cart).forEach(item=>{
+total+=item.price*item.qty;
+count+=item.qty;
+
+items.innerHTML+=`
+<div class="cart-item">
+<span>${item.name} x${item.qty}</span>
+<span>₹${item.price*item.qty}</span>
+</div>`;
+});
+
+document.getElementById("total").innerText=total;
+document.getElementById("count").innerText=count;
+}
+
+function generateBill(){
+document.getElementById("bill").style.display="block";
+document.getElementById("date").innerText=new Date().toLocaleString();
+
+let billItems=document.getElementById("billItems");
+billItems.innerHTML="";
+let total=0;
+
+Object.values(cart).forEach(item=>{
+let t=item.price*item.qty;
+total+=t;
+
+billItems.innerHTML+=`
+<tr>
+<td>${item.name}</td>
+<td>${item.qty}</td>
+<td>₹${item.price}</td>
+<td>₹${t}</td>
+</tr>`;
+});
+
+document.getElementById("billTotal").innerText=total;
+}
+
+function scrollTo(id){
+document.getElementById(id).scrollIntoView({behavior:"smooth"});
+}
+
+loadProducts();
+</script>
+
+</body>
+</html>
